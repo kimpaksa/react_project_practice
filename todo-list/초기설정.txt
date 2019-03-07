@@ -1,0 +1,40 @@
+﻿* 초기 세팅
+1. yarn eject 입력하고, 하기와 같은 메시지가 뜰 경우에는
+
+This git repository has untracked files or uncommitted changes:
+
+todo-list/
+
+Remove untracked files, stash or commit any changes, and try again.
+error Command failed with exit code 1.
+
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+
+git 커밋을 수행하고 다시 한번 yarn eject를 시도해 본다.
+
+2. 하기 명령어를 입력
+yarn add sass-loader node-sass classnames
+
+3. webpack 설정
+            // Opt-in support for SASS (using .scss or .sass extensions).
+            // By default we support SASS Modules with the
+            // extensions .module.scss or .module.sass
+            {
+              test: sassRegex,
+              exclude: sassModuleRegex,
+              use: getStyleLoaders({
+                importLoaders: 2,
+                sourceMap: isEnvProduction && shouldUseSourceMap
+              }).concat({
+                loader: require.resolve('sass-loader'),
+                options: {
+                  includePaths: [paths.appSrc + '/styles'],
+                  sourceMap: isEnvProduction && shouldUseSourceMap,
+                }
+              }),
+              // Don't consider CSS imports dead code even if the
+              // containing package claims to have no side effects.
+              // Remove this when webpack adds a warning or an error for this.
+              // See https://github.com/webpack/webpack/issues/6571
+              sideEffects: true,
+            },
