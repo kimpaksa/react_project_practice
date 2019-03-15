@@ -1,3 +1,5 @@
+// 이 파일은 멀티카운터 생성으로 인해 사용되지 않는다.
+
 import Counter from '../components/Counter';
 import * as actions from '../actions';
 import { connect } from 'react-redux';

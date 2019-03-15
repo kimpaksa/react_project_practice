@@ -1,8 +1,89 @@
+import * as types from '../actions/ActionTypes';
+
+// 초기 상태를 정의 합니다.
+const initialState = {
+    counters: [
+        {
+            color: 'black',
+            number: 0
+        }
+    ]
+};
+
+function counter(state = initialState, action) {
+    const { counters } = state;
+
+    switch(action.type){
+        case types.CREATE:
+            return {
+                counters : [
+                    ...counters,
+                    {
+                        color: action.color,
+                        number:0
+                    }
+                ]
+            };
+        case types.REMOVE:
+            return {
+                counters: counters.slice(0, counters.length - 1)
+            };
+        case types.INCREMENT:
+            return {
+                counters: [
+                    ...counters.slice(0, action.index),
+                    {
+                        ...counters[action.index],
+                        number: counters[action.index].number + 1
+                    },
+                    ...counters.slice(action.index + 1, counters.length)
+                ]
+            };
+        case types.DECREMENT:
+            return {
+                counters: [
+                    ...counters.slice(0, action.index),
+                    {
+                        ...counters[action.index],
+                        number: counters[action.index].number - 1
+                    },
+                    ...counters.slice(action.index + 1, counters.length)
+                ]
+            };
+        case types.SET_COLOR:
+            return {
+                counters: [
+                    ...counters.slice(0, action.index),
+                    {
+                        ...counters[action.index],
+                        color: action.color
+                    },
+                    ...counters.slice(action.index + 1, counters.length)
+                ]
+            };
+        default: 
+            return state;
+    }
+}
+
+
+export default counter;
+
+
+
+
+
+
+
+
+
+/* 멀티 카운터 생성을 위해 하기 코드는 주석처리 */
+/*
 import number from './number';
 import color from './color';
 
 import { combineReducers } from 'redux';
-
+*/
 /*
     서브 리듀서들을 하나로 합칩니다.
     combineReducers를 실행하고 나면, 나중에 store형태를 
@@ -18,14 +99,14 @@ import { combineReducers } from 'redux';
         }
     }
 */
-
+/*
 const reducers = combineReducers({
     numberData: number,
     colorData: color
 });
 
 export default reducers;
-
+*/
 
 
 
