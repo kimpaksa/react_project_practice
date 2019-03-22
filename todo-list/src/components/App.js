@@ -1,3 +1,25 @@
+// 리덕스 적용 후
+import React, { Component } from 'react';
+import PageTemplate from './PageTemplate';
+
+import TodoInputContainer from '../containers/TodoInputContainer';
+import TodoListContainer from '../containers/TodoListContainer';
+
+class App extends Component {
+
+    render() {
+
+        return (
+            <PageTemplate>
+                <TodoInputContainer/>
+                <TodoListContainer/>
+            </PageTemplate>
+        );
+    }
+}
+
+/*
+리덕스 적용 전
 import React, { Component } from 'react';
 import PageTemplate from './PageTemplate'
 import TodoInput from './TodoInput';
@@ -95,5 +117,5 @@ class App extends Component {
         );
     }
 }
-
+*/
 export default App;
