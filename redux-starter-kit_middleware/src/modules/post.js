@@ -1,5 +1,5 @@
 import { handleActions, createAction } from 'redux-actions';
-
+import {pender} from 'redux-pender';
 import axios from 'axios';
 
 function getPostAPI(postId) {
@@ -11,14 +11,21 @@ function getPostAPI(postId) {
 
 /* 액션 부분 */
 // 1. 액션의 Type을 정의
-const GET_POST_PENDING = 'GET_POST_PENDING';
-const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
-const GET_POST_FAILURE = 'GET_POST_FAILURE';
+const GET_POST = 'GET_POST';
+//const GET_POST_PENDING = 'GET_POST_PENDING';
+//const GET_POST_SUCCESS = 'GET_POST_SUCCESS';
+//const GET_POST_FAILURE = 'GET_POST_FAILURE';
 
 // 2. 액션 생성자 정의
-const getPostPending = createAction(GET_POST_PENDING);
-const getPostSuccess = createAction(GET_POST_SUCCESS);
-const getPostFailure = createAction(GET_POST_FAILURE);
+/*
+    export const getPost = createAction('GET_POST', getPostAPI);
+    redux-pender 의 액션 구조는 Flux Standard action(https://github.com/acdlite/flux-standard-action)을 따르기 때문에
+    createAction으로 액션을 받을 수 있다. 두번째로 들어가는 파라미터는 Promise를 반환하는 함수여야함.
+*/
+export const getPost = createAction('GET_POST', getPostAPI);
+//const getPostPending = createAction(GET_POST_PENDING);
+//const getPostSuccess = createAction(GET_POST_SUCCESS);
+//const getPostFailure = createAction(GET_POST_FAILURE);
 /* redux-actions에서는 
 1. 아래의 코드를 
     export const increment = (index) => ({
@@ -45,8 +52,9 @@ const getPostFailure = createAction(GET_POST_FAILURE);
 
 // 3. 상태값 정의
 const initialState = {
-    pending: false,
-    error: false,
+    // 요청이 진행중인지, 오류가 발생하는지 여부는 더이상 직접 관리할 필요 없음(penderReducer가 담당하기 때문)
+    //    pending: false,
+    //    error: false,
     data: {
         title: '',
         body: ''
@@ -58,7 +66,40 @@ const initialState = {
 // 상태값을 어떻게 적용할 것인지를 정해준다.
 // 어떤 액션이 왔는가에 따라서..
 export default handleActions({
-    [GET_POST_PENDING]: (state,action) => {
+    ...pender({
+        type: GET_POST, //type이 주어지면 이 type에 접미사를 붙인
+                        // 액션 핸들러들이 담긴 객체를 만든다.
+        /*
+            요청중일 때와 실패했을 때 추가로 해야 할 작업이 있다면
+            이렇게 onPending과 onFailure를 추가하면 된다.
+            onPending: (state, action) => state,
+            onFailure: (state, action) => state
+         */
+        onSuccess: (state, action) => {
+            // 성공시 해야할 작업이 따로 없으면 구현 하지 않아도 된다.
+            const {title, body} = action.payload.data;
+            return {
+                data: {
+                    title, 
+                    body
+                }
+            };
+        },
+        onCancel: (state, action) => {
+            return {
+                data: {
+                    title: '취소됨',
+                    body:  '취소됨',
+                }
+            }
+        }
+    })
+    // 함수 생략시 기본 값으로는 (state, action) => state를 설정한다.
+    // (state를 그대로 반환한다는 의미)
+
+
+
+/*    [GET_POST_PENDING]: (state,action) => {
         return {
             ...state,
             pending: true,
@@ -84,8 +125,9 @@ export default handleActions({
             error: true
         };
     }, 
+*/
 }, initialState);
-
+/*
 
 //src/App.js에서 getPost를 호출하기 위해 export한다.
 export const getPost = (postId) => dispatch => {
@@ -111,4 +153,4 @@ export const getPost = (postId) => dispatch => {
         throw(error);
     })
 
-}
+}*/
